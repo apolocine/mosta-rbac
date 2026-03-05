@@ -1,0 +1,126 @@
+{
+  "name": "@mostajs/rbac",
+  "version": "1.0.0",
+  "description": "Reusable RBAC management UI — Users, Roles, Permissions, Categories, Matrix",
+  "author": "Dr Hamid MADANI <drmdh@msn.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "require": "./dist/server.js",
+      "default": "./dist/server.js"
+    },
+    "./api/users": {
+      "types": "./dist/api/users.d.ts",
+      "import": "./dist/api/users.js",
+      "default": "./dist/api/users.js"
+    },
+    "./api/users-id": {
+      "types": "./dist/api/users-id.d.ts",
+      "import": "./dist/api/users-id.js",
+      "default": "./dist/api/users-id.js"
+    },
+    "./api/roles": {
+      "types": "./dist/api/roles.d.ts",
+      "import": "./dist/api/roles.js",
+      "default": "./dist/api/roles.js"
+    },
+    "./api/roles-id": {
+      "types": "./dist/api/roles-id.d.ts",
+      "import": "./dist/api/roles-id.js",
+      "default": "./dist/api/roles-id.js"
+    },
+    "./api/permissions": {
+      "types": "./dist/api/permissions.d.ts",
+      "import": "./dist/api/permissions.js",
+      "default": "./dist/api/permissions.js"
+    },
+    "./api/permissions-id": {
+      "types": "./dist/api/permissions-id.d.ts",
+      "import": "./dist/api/permissions-id.js",
+      "default": "./dist/api/permissions-id.js"
+    },
+    "./api/matrix": {
+      "types": "./dist/api/matrix.d.ts",
+      "import": "./dist/api/matrix.js",
+      "default": "./dist/api/matrix.js"
+    },
+    "./api/categories": {
+      "types": "./dist/api/categories.d.ts",
+      "import": "./dist/api/categories.js",
+      "default": "./dist/api/categories.js"
+    },
+    "./api/categories-id": {
+      "types": "./dist/api/categories-id.d.ts",
+      "import": "./dist/api/categories-id.js",
+      "default": "./dist/api/categories-id.js"
+    },
+    "./api/seed": {
+      "types": "./dist/api/seed.d.ts",
+      "import": "./dist/api/seed.js",
+      "default": "./dist/api/seed.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "rbac",
+    "roles",
+    "permissions",
+    "users",
+    "admin",
+    "management",
+    "nextjs",
+    "mosta"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apolocine/mosta-rbac"
+  },
+  "homepage": "https://mostajs.dev/packages/rbac",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "next-auth": "^5.0.0-beta.30",
+    "tailwind-merge": "^2.6.0",
+    "zod": "^3.23.0"
+  },
+  "peerDependencies": {
+    "@mostajs/audit": "^1.0.0",
+    "@mostajs/auth": "^1.0.0",
+    "@mostajs/orm": "^1.0.0",
+    "@tanstack/react-query": ">=5",
+    "lucide-react": ">=0.400",
+    "next": ">=14",
+    "radix-ui": ">=1",
+    "react": ">=18",
+    "sonner": ">=1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3",
+    "@types/react": "^19.0.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "typescript": "^5.6.0"
+  }
+}
