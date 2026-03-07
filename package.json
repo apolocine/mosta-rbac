@@ -68,6 +68,11 @@
       "types": "./dist/api/seed.d.ts",
       "import": "./dist/api/seed.js",
       "default": "./dist/api/seed.js"
+    },
+    "./lib/menu": {
+      "types": "./dist/lib/menu.d.ts",
+      "import": "./dist/lib/menu.js",
+      "default": "./dist/lib/menu.js"
     }
   },
   "files": [
