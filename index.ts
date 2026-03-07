@@ -4,6 +4,9 @@
 // CLIENT-SAFE exports only. Server-side API handlers are available
 // via deep imports: @mostajs/rbac/api/roles, @mostajs/rbac/api/seed, etc.
 
+// Menu contribution
+export { rbacMenuContribution } from './lib/menu'
+
 // Components (client-side)
 export { UsersManager } from './components/UsersManager'
 export { RBACManager } from './components/RBACManager'
