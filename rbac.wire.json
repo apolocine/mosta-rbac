@@ -1,0 +1,11 @@
+{
+  "_doc": "Manifeste de câblage pour @mostajs/rbac",
+  "package": "@mostajs/rbac",
+  "version": "1.0.2",
+  "type": "functional",
+
+  "menu": {
+    "name": "rbacMenuContribution",
+    "from": "@mostajs/rbac/lib/menu"
+  }
+}

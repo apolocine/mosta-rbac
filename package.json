@@ -1,6 +1,6 @@
 {
   "name": "@mostajs/rbac",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Reusable RBAC management UI — Users, Roles, Permissions, Categories, Matrix",
   "author": "Dr Hamid MADANI <drmdh@msn.com>",
   "license": "MIT",
@@ -77,6 +77,7 @@
   },
   "files": [
     "dist",
+    "rbac.wire.json",
     "LICENSE",
     "README.md"
   ],
