@@ -1,11 +1,22 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
-// @mostajs/rbac — Reusable RBAC Management UI & API handlers
-//
-// CLIENT-SAFE exports only. Server-side API handlers are available
-// via deep imports: @mostajs/rbac/api/roles, @mostajs/rbac/api/seed, etc.
+// @mostajs/rbac — Client-safe barrel (NO ORM imports)
+// For server-side code (repos, seed, permissions-server), use '@mostajs/rbac/server'
+
+// Schemas (pure data definitions — no ORM dependency)
+export { UserSchema } from './schemas/user.schema'
+export { RoleSchema } from './schemas/role.schema'
+export { PermissionSchema } from './schemas/permission.schema'
+export { PermissionCategorySchema } from './schemas/permission-category.schema'
 
 // Menu contribution
 export { rbacMenuContribution } from './lib/menu'
+
+// Pages (client-side, registered via PageRegistration)
+export { default as UsersPage } from './pages/UsersPage'
+export { default as RolesPage } from './pages/RolesPage'
+
+// i18n
+export { t as rbacT } from './lib/i18n'
 
 // Components (client-side)
 export { UsersManager } from './components/UsersManager'
@@ -26,6 +37,10 @@ export {
 
 // Types (type-only exports — zero runtime cost)
 export type {
+  UserDTO,
+  RoleDTO,
+  PermissionDTO,
+  PermissionCategoryDTO,
   User,
   RoleOption,
   RoleData,

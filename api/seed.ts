@@ -1,8 +1,7 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
 // RBAC API handler: POST /admin/permissions/seed
 import { NextResponse } from 'next/server'
-import { PermissionRepository, RoleRepository, PermissionCategoryRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import type { PermissionDefinition, RoleDefinition, CategoryDefinition } from '../types'
 
 export interface SeedHandlerConfig {
@@ -26,9 +25,7 @@ export function createSeedHandler(config: SeedHandlerConfig) {
     const { error } = await checkPermission(adminPermission)
     if (error) return error
 
-    const catRepo = new PermissionCategoryRepository(await getDialect())
-    const pRepo = new PermissionRepository(await getDialect())
-    const rRepo = new RoleRepository(await getDialect())
+    const { categories: catRepo, permissions: pRepo, roles: rRepo } = await getRbacRepos()
 
     // Upsert categories
     for (const catDef of categoryDefinitions) {
@@ -38,7 +35,7 @@ export function createSeedHandler(config: SeedHandlerConfig) {
     // Upsert all permissions
     const permissionMap: Record<string, string> = {}
     for (const pDef of permissionDefinitions) {
-      const perm = await pRepo.upsert(
+      const perm = await (pRepo as any).upsert(
         { name: pDef.name },
         { name: pDef.name, description: pDef.description, category: pDef.category },
       )
@@ -52,7 +49,7 @@ export function createSeedHandler(config: SeedHandlerConfig) {
         .map((code) => permissionMap[code])
         .filter(Boolean)
 
-      await rRepo.upsert(
+      await (rRepo as any).upsert(
         { name: roleDef.name },
         {
           name: roleDef.name,

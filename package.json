@@ -1,7 +1,7 @@
 {
   "name": "@mostajs/rbac",
-  "version": "1.0.4",
-  "description": "Reusable RBAC management UI — Users, Roles, Permissions, Categories, Matrix",
+  "version": "2.0.1",
+  "description": "RBAC — User/Role/Permission schemas, repos, management UI, API handlers",
   "author": "Dr Hamid MADANI <drmdh@msn.com>",
   "license": "MIT",
   "main": "dist/index.js",
@@ -73,10 +73,82 @@
       "types": "./dist/lib/menu.d.ts",
       "import": "./dist/lib/menu.js",
       "default": "./dist/lib/menu.js"
+    },
+    "./lib/rbac-seed": {
+      "types": "./dist/lib/rbac-seed.d.ts",
+      "import": "./dist/lib/rbac-seed.js",
+      "default": "./dist/lib/rbac-seed.js"
+    },
+    "./lib/permissions-server": {
+      "types": "./dist/lib/permissions-server.d.ts",
+      "import": "./dist/lib/permissions-server.js",
+      "default": "./dist/lib/permissions-server.js"
+    },
+    "./lib/repos-factory": {
+      "types": "./dist/lib/repos-factory.d.ts",
+      "import": "./dist/lib/repos-factory.js",
+      "default": "./dist/lib/repos-factory.js"
+    },
+    "./lib/data-mode": {
+      "types": "./dist/lib/data-mode.d.ts",
+      "import": "./dist/lib/data-mode.js",
+      "default": "./dist/lib/data-mode.js"
+    },
+    "./components/UsersManager": {
+      "types": "./dist/components/UsersManager.d.ts",
+      "import": "./dist/components/UsersManager.js",
+      "default": "./dist/components/UsersManager.js"
+    },
+    "./components/RBACManager": {
+      "types": "./dist/components/RBACManager.d.ts",
+      "import": "./dist/components/RBACManager.js",
+      "default": "./dist/components/RBACManager.js"
+    },
+    "./components/RolesManager": {
+      "types": "./dist/components/RolesManager.d.ts",
+      "import": "./dist/components/RolesManager.js",
+      "default": "./dist/components/RolesManager.js"
+    },
+    "./components/PermissionsManager": {
+      "types": "./dist/components/PermissionsManager.d.ts",
+      "import": "./dist/components/PermissionsManager.js",
+      "default": "./dist/components/PermissionsManager.js"
+    },
+    "./components/CategoriesManager": {
+      "types": "./dist/components/CategoriesManager.d.ts",
+      "import": "./dist/components/CategoriesManager.js",
+      "default": "./dist/components/CategoriesManager.js"
+    },
+    "./components/PermissionMatrix": {
+      "types": "./dist/components/PermissionMatrix.d.ts",
+      "import": "./dist/components/PermissionMatrix.js",
+      "default": "./dist/components/PermissionMatrix.js"
+    },
+    "./pages/UsersPage": {
+      "types": "./dist/pages/UsersPage.d.ts",
+      "import": "./dist/pages/UsersPage.js",
+      "default": "./dist/pages/UsersPage.js"
+    },
+    "./pages/RolesPage": {
+      "types": "./dist/pages/RolesPage.d.ts",
+      "import": "./dist/pages/RolesPage.js",
+      "default": "./dist/pages/RolesPage.js"
+    },
+    "./lib/i18n": {
+      "types": "./dist/lib/i18n.d.ts",
+      "import": "./dist/lib/i18n.js",
+      "default": "./dist/lib/i18n.js"
+    },
+    "./register": {
+      "types": "./dist/register.d.ts",
+      "import": "./dist/register.js",
+      "default": "./dist/register.js"
     }
   },
   "files": [
     "dist",
+    "i18n",
+    "wire.json",
     "rbac.wire.json",
     "LICENSE",
     "README.md"
@@ -104,6 +176,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@mostajs/orm": "^1.0.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -115,7 +188,7 @@
     "@mostajs/audit": "^1.0.0",
     "@mostajs/auth": "^1.0.0",
     "@mostajs/menu": ">=1.0.2",
-    "@mostajs/orm": "^1.0.0",
+    "@mostajs/socle": ">=2.0.0",
     "@tanstack/react-query": ">=5",
     "lucide-react": ">=0.400",
     "next": ">=14",
@@ -125,14 +198,19 @@
   },
   "devDependencies": {
     "@mostajs/auth": "^1.0.2",
-    "@mostajs/menu": "^1.0.2",
+    "@mostajs/menu": "^1.0.3",
+    "@mostajs/socle": "^2.0.0",
+    "@types/bcryptjs": "^2.4.0",
     "@types/node": "^25.3.3",
     "@types/react": "^19.0.0",
-    "next": "^15.0.0",
+    "next": "^16.1.6",
     "react": "^19.0.0",
     "typescript": "^5.6.0"
   },
   "peerDependenciesMeta": {
+    "@mostajs/auth": {
+      "optional": false
+    },
     "@mostajs/menu": {
       "optional": true
     }

@@ -1,0 +1,18 @@
+{
+  "_author": "Dr Hamid MADANI drmdh@msn.com",
+  "title": "Utilisateurs",
+  "create": "Nouvel utilisateur",
+  "fields": {
+    "email": "Email",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "phone": "Téléphone",
+    "role": "Rôle",
+    "status": "Statut"
+  },
+  "statuses": {
+    "active": "Actif",
+    "locked": "Verrouillé",
+    "disabled": "Désactivé"
+  }
+}

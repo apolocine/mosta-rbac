@@ -1,0 +1,12 @@
+{
+  "name": "rbac",
+  "package": "@mostajs/rbac",
+  "version": "2.0.0",
+  "type": "core",
+  "priority": 2,
+  "dependencies": ["orm"],
+  "displayName": "RBAC",
+  "description": "Role-Based Access Control — users, roles, permissions schemas, repos, management UI",
+  "icon": "ShieldCheck",
+  "register": "./dist/register.js"
+}

@@ -1,7 +1,21 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
-// @mostajs/rbac/server — Server-side API handler factories
-// Import from '@mostajs/rbac/server' in Next.js API routes (route.ts)
+// @mostajs/rbac/server — Server-side exports (ORM-dependent)
+// Import from '@mostajs/rbac/server' in API routes and server code
 
+// Repositories (depend on @mostajs/orm)
+export { UserRepository } from './repositories/user.repository'
+export { RoleRepository } from './repositories/role.repository'
+export { PermissionRepository } from './repositories/permission.repository'
+export { PermissionCategoryRepository } from './repositories/permission-category.repository'
+
+// RBAC seed (depends on repos → ORM)
+export { seedRBAC } from './lib/rbac-seed'
+export type { SeedRBACOptions } from './lib/rbac-seed'
+
+// Server-side permission DB lookup (depends on repos → ORM)
+export { getPermissionsForRoleFromDB } from './lib/permissions-server'
+
+// API handler factories
 export { createUsersHandler } from './api/users'
 export { createUsersIdHandler } from './api/users-id'
 export { createRolesHandler } from './api/roles'
@@ -13,7 +27,7 @@ export { createCategoriesHandler } from './api/categories'
 export { createCategoriesIdHandler } from './api/categories-id'
 export { createSeedHandler } from './api/seed'
 
-// Re-export config types for convenience
+// Re-export config types
 export type { UsersHandlerConfig } from './api/users'
 export type { UsersIdHandlerConfig } from './api/users-id'
 export type { RolesHandlerConfig } from './api/roles'

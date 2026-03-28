@@ -1,5 +1,53 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
-// UI-specific types for RBAC management components
+// Types for RBAC — entities, DTOs, definitions, UI data shapes
+
+// ─── Entity DTOs ─────────────────────────────────────────────
+
+export interface UserDTO {
+  id: string
+  email: string
+  password?: string
+  firstName: string
+  lastName: string
+  phone?: string
+  roles: any[]
+  status: 'active' | 'locked' | 'disabled'
+  lastLoginAt?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface RoleDTO {
+  id: string
+  name: string
+  description?: string
+  permissions: any[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface PermissionDTO {
+  id: string
+  name: string
+  description?: string
+  category?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface PermissionCategoryDTO {
+  id: string
+  name: string
+  label: string
+  description?: string
+  icon?: string
+  order: number
+  system: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+// ─── UI Data Shapes ──────────────────────────────────────────
 
 export interface User {
   id: string

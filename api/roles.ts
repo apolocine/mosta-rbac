@@ -1,8 +1,7 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
 // RBAC API handler: GET/POST /admin/roles
 import { NextRequest, NextResponse } from 'next/server'
-import { RoleRepository, UserRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 import type { RoleDefinition } from '../types'
 
@@ -25,7 +24,7 @@ export function createRolesHandler(config: RolesHandlerConfig) {
     const { error } = await checkPermission(adminPermission)
     if (error) return error
 
-    const rRepo = new RoleRepository(await getDialect())
+    const { roles: rRepo, users: uRepo } = await getRbacRepos()
     let roles = await rRepo.findAllWithPermissions()
 
     // Fallback: if DB is empty, return hardcoded defaults
@@ -40,8 +39,6 @@ export function createRolesHandler(config: RolesHandlerConfig) {
       }))
       return NextResponse.json({ data: fallbackRoles })
     }
-
-    const uRepo = new UserRepository(await getDialect())
     const allUsers = await uRepo.findAllSafe()
     const rolesWithCount = roles.map((r) => ({
       ...r,
@@ -69,7 +66,7 @@ export function createRolesHandler(config: RolesHandlerConfig) {
     }
 
     const { name, description, permissionIds } = parsed.data
-    const rRepo = new RoleRepository(await getDialect())
+    const { roles: rRepo } = await getRbacRepos()
 
     const existing = await rRepo.findByName(name)
     if (existing) {

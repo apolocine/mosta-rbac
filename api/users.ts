@@ -2,8 +2,7 @@
 // RBAC API handler: GET/POST /users
 import { NextRequest, NextResponse } from 'next/server'
 import { hashPassword } from '@mostajs/auth/lib/password'
-import { UserRepository, RoleRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 
 const createUserSchema = z.object({
@@ -38,7 +37,7 @@ export function createUsersHandler(config: UsersHandlerConfig) {
     const { error } = await checkPermission(adminPermission)
     if (error) return error
 
-    const repo = new UserRepository(await getDialect())
+    const { users: repo } = await getRbacRepos()
     const users = await repo.findAllSafe({}, { sort: { createdAt: -1 } })
 
     return NextResponse.json({ data: users })
@@ -59,7 +58,7 @@ export function createUsersHandler(config: UsersHandlerConfig) {
     }
 
     const { email, password, firstName, lastName, phone, role } = parsed.data
-    const repo = new UserRepository(await getDialect())
+    const { users: repo, roles: rRepo } = await getRbacRepos()
 
     const existing = await repo.findByEmail(email)
     if (existing) {
@@ -71,7 +70,6 @@ export function createUsersHandler(config: UsersHandlerConfig) {
 
     // Validate role exists (known constants or DB)
     if (!knownRoles.includes(role)) {
-      const rRepo = new RoleRepository(await getDialect())
       const dbRole = await rRepo.findByName(role)
       if (!dbRole) {
         return NextResponse.json(
