@@ -12,6 +12,13 @@ export { PermissionCategoryRepository } from './repositories/permission-category
 export { seedRBAC } from './lib/rbac-seed'
 export type { SeedRBACOptions } from './lib/rbac-seed'
 
+// Create admin (depends on repos → ORM + bcrypt)
+export { createAdmin } from './lib/create-admin'
+export type { CreateAdminOptions, CreateAdminResult } from './lib/create-admin'
+
+// Module info (schemas, seeds, metadata — for setup discovery)
+export { getSchemas, moduleInfo } from './lib/module-info'
+
 // Server-side permission DB lookup (depends on repos → ORM)
 export { getPermissionsForRoleFromDB } from './lib/permissions-server'
 
