@@ -24,6 +24,7 @@
     "api/**/*.ts",
     "components/**/*.tsx",
     "pages/**/*.tsx",
+    "helpers/**/*.ts",
     "lib/**/*.ts",
     "i18n/**/*.json",
     "types/**/*.ts"

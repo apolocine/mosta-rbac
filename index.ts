@@ -26,6 +26,9 @@ export { PermissionsManager } from './components/PermissionsManager'
 export { CategoriesManager } from './components/CategoriesManager'
 export { PermissionMatrix } from './components/PermissionMatrix'
 
+// Permission matching helpers
+export { hasPermission, matchesPermission } from './helpers/permissions'
+
 // API helpers (client-side fetch wrappers — no server deps)
 export {
   createUsersApi,

@@ -1,9 +1,7 @@
-// repos-factory.ts — Centralized repository factory for dual ORM/NET mode
-// In ORM mode: returns ORM repositories (BaseRepository + IDialect)
-// In NET mode: returns NetClient-backed repositories with the same API
+// repos-factory.ts — Centralized repository factory
+// Uses @mostajs/octoswitcher to get the right dialect (ORM or NET)
 // Author: Dr Hamid MADANI drmdh@msn.com
 
-import { isNetMode } from './data-mode.js';
 import type { UserDTO, RoleDTO, PermissionDTO, PermissionCategoryDTO } from '../types/index.js';
 
 // ============================================================
@@ -69,7 +67,7 @@ export interface IPermissionCategoryRepository {
 }
 
 // ============================================================
-// Factory — returns repos for current mode
+// Factory — uses octoswitcher (ORM or NET, transparent)
 // ============================================================
 
 export interface RbacRepos {
@@ -81,27 +79,12 @@ export interface RbacRepos {
 
 let _cached: RbacRepos | null = null;
 
-/** Get RBAC repositories for the current data mode (ORM or NET) */
+/** Get RBAC repositories — dialect resolved by octoswitcher (ORM or NET) */
 export async function getRbacRepos(): Promise<RbacRepos> {
   if (_cached) return _cached;
 
-  if (isNetMode()) {
-    _cached = await createNetRepos();
-  } else {
-    _cached = await createOrmRepos();
-  }
-  return _cached;
-}
-
-/** Reset cache (for tests) */
-export function resetRbacRepos(): void { _cached = null; }
-
-// ============================================================
-// ORM mode — original repositories
-// ============================================================
-
-async function createOrmRepos(): Promise<RbacRepos> {
-  const { getDialect, registerSchemas } = await import('@mostajs/orm');
+  const { getDialect } = await import('@mostajs/octoswitcher');
+  const { registerSchemas } = await import('@mostajs/orm');
   const { UserSchema } = await import('../schemas/user.schema.js');
   const { RoleSchema } = await import('../schemas/role.schema.js');
   const { PermissionSchema } = await import('../schemas/permission.schema.js');
@@ -113,100 +96,20 @@ async function createOrmRepos(): Promise<RbacRepos> {
 
   registerSchemas([UserSchema, RoleSchema, PermissionSchema, PermissionCategorySchema]);
   const dialect = await getDialect();
+  // Ensure tables exist (initSchema may have been called before our schemas were registered)
+  if (typeof (dialect as any).initSchema === 'function') {
+    const { getAllSchemas } = await import('@mostajs/orm');
+    await (dialect as any).initSchema(getAllSchemas());
+  }
 
-  return {
-    users: new UserRepository(dialect) as IUserRepository,
-    roles: new RoleRepository(dialect) as IRoleRepository,
-    permissions: new PermissionRepository(dialect) as IPermissionRepository,
-    categories: new PermissionCategoryRepository(dialect) as IPermissionCategoryRepository,
+  _cached = {
+    users: new UserRepository(dialect as any) as IUserRepository,
+    roles: new RoleRepository(dialect as any) as IRoleRepository,
+    permissions: new PermissionRepository(dialect as any) as IPermissionRepository,
+    categories: new PermissionCategoryRepository(dialect as any) as IPermissionCategoryRepository,
   };
+  return _cached;
 }
 
-// ============================================================
-// NET mode — NetClient-backed repositories
-// ============================================================
-
-async function createNetRepos(): Promise<RbacRepos> {
-  const { NetClient } = await import('@mostajs/net/client');
-  const client = new NetClient({ url: process.env.MOSTA_NET_URL! });
-
-  return {
-    users: createNetUserRepo(client),
-    roles: createNetRoleRepo(client),
-    permissions: createNetPermissionRepo(client),
-    categories: createNetCategoryRepo(client),
-  };
-}
-
-function createNetUserRepo(c: any): IUserRepository {
-  return {
-    findAllSafe: (filter = {}, options?) => c.findAll('users', filter, { ...options, exclude: ['password'] }),
-    findByIdSafe: (id) => c.findById('users', id),  // NET-side can add exclude later
-    findByEmail: (email) => c.findOne('users', { email: email.toLowerCase() }),
-    updateLastLogin: async (id) => { await c.update('users', id, { lastLoginAt: new Date().toISOString() }); },
-    findByIdWithRoles: (id) => c.findByIdWithRelations('users', id, ['roles']),
-    findAllWithRoles: (filter = {}, options?) => c.findWithRelations('users', filter, ['roles'], options),
-    countByRole: (roleId) => c.count('users', { roles: roleId }),
-    addRole: (userId, roleId) => c.addToSet('users', userId, 'roles', roleId),
-    removeRole: (userId, roleId) => c.pull('users', userId, 'roles', roleId),
-    create: (data) => c.create('users', data),
-    update: (id, data) => c.update('users', id, data),
-    delete: (id) => c.delete('users', id),
-    findById: (id) => c.findById('users', id),
-    findOne: (filter) => c.findOne('users', filter),
-    findAll: (filter = {}, options?) => c.findAll('users', filter, options),
-    count: (filter?) => c.count('users', filter),
-  };
-}
-
-function createNetRoleRepo(c: any): IRoleRepository {
-  return {
-    findAll: (filter = {}, options?) => c.findAll('roles', filter, options),
-    findByName: (name) => c.findOne('roles', { name }),
-    findAllWithPermissions: () => c.findWithRelations('roles', {}, ['permissions']),
-    findByIdWithPermissions: (id) => c.findByIdWithRelations('roles', id, ['permissions']),
-    addPermission: (roleId, permId) => c.addToSet('roles', roleId, 'permissions', permId),
-    removePermission: (roleId, permId) => c.pull('roles', roleId, 'permissions', permId),
-    removePermissionFromAll: async (permId) => {
-      const roles = await c.findAll('roles');
-      for (const role of roles) {
-        if (role.permissions?.includes(permId)) {
-          await c.pull('roles', role.id, 'permissions', permId);
-        }
-      }
-    },
-    create: (data) => c.create('roles', data),
-    update: (id, data) => c.update('roles', id, data),
-    delete: (id) => c.delete('roles', id),
-    findById: (id) => c.findById('roles', id),
-    count: (filter?) => c.count('roles', filter),
-  };
-}
-
-function createNetPermissionRepo(c: any): IPermissionRepository {
-  return {
-    findAllSorted: () => c.findAll('permissions', {}, { sort: { category: 1, name: 1 } }),
-    findByName: (name) => c.findOne('permissions', { name }),
-    countByCategory: (catId) => c.count('permissions', { category: catId }),
-    create: (data) => c.create('permissions', data),
-    update: (id, data) => c.update('permissions', id, data),
-    delete: (id) => c.delete('permissions', id),
-    findAll: (filter = {}, options?) => c.findAll('permissions', filter, options),
-    findById: (id) => c.findById('permissions', id),
-    count: (filter?) => c.count('permissions', filter),
-  };
-}
-
-function createNetCategoryRepo(c: any): IPermissionCategoryRepository {
-  return {
-    findAllOrdered: () => c.findAll('permission_categories', {}, { sort: { order: 1, name: 1 } }),
-    findByName: (name) => c.findOne('permission_categories', { name }),
-    create: (data) => c.create('permission_categories', data),
-    update: (id, data) => c.update('permission_categories', id, data),
-    delete: (id) => c.delete('permission_categories', id),
-    findAll: (filter = {}, options?) => c.findAll('permission_categories', filter, options),
-    findById: (id) => c.findById('permission_categories', id),
-    count: (filter?) => c.count('permission_categories', filter),
-    upsert: (filter, data) => c.upsert('permission_categories', filter, data),
-  };
-}
+/** Reset cache (for tests) */
+export function resetRbacRepos(): void { _cached = null; }

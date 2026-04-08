@@ -15,6 +15,7 @@ export function getSchemas() {
 /** Module metadata for setup discovery */
 export const moduleInfo = {
   name: 'rbac',
+  version: '2.1.0',
   label: 'Roles & Permissions',
   description: 'User, Role, Permission, PermissionCategory management',
   schemas: getSchemas,

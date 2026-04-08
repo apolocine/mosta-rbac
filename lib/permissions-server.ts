@@ -1,6 +1,6 @@
 // @mostajs/rbac — Server-side permission lookup (DO NOT import client-side)
 // Author: Dr Hamid MADANI drmdh@msn.com
-import { getRbacRepos } from './repos-factory'
+import { getRbacRepos } from './repos-factory.js'
 
 /**
  * Resolve permissions for a role by querying the database.

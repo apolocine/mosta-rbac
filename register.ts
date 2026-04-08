@@ -27,7 +27,7 @@ export function register(registry: { register(r: ModuleRegistration): void }): v
     manifest: {
       name: 'rbac',
       package: '@mostajs/rbac',
-      version: '2.0.0',
+      version: '2.1.0',
       type: 'core',
       priority: 2,
       dependencies: ['orm'],

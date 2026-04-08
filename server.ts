@@ -12,6 +12,9 @@ export { PermissionCategoryRepository } from './repositories/permission-category
 export { seedRBAC } from './lib/rbac-seed'
 export type { SeedRBACOptions } from './lib/rbac-seed'
 
+// Permission matching helpers
+export { hasPermission, matchesPermission } from './helpers/permissions'
+
 // Create admin (depends on repos → ORM + bcrypt)
 export { createAdmin } from './lib/create-admin'
 export type { CreateAdminOptions, CreateAdminResult } from './lib/create-admin'

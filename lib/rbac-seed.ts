@@ -1,7 +1,7 @@
 // @mostajs/rbac — RBAC Seed function
 // Author: Dr Hamid MADANI drmdh@msn.com
-import { getRbacRepos } from './repos-factory'
-import type { CategoryDefinition, PermissionDefinition, RoleDefinition } from '../types/index'
+import { getRbacRepos } from './repos-factory.js'
+import type { CategoryDefinition, PermissionDefinition, RoleDefinition } from '../types/index.js'
 
 export interface SeedRBACOptions {
   categories: CategoryDefinition[]
@@ -28,9 +28,10 @@ export async function seedRBAC(options: SeedRBACOptions): Promise<{
   // 2. Upsert permissions — build code→id map
   const permissionMap: Record<string, string> = {}
   for (const pDef of options.permissions) {
+    const displayName = pDef.name || pDef.code
     const perm = await (permRepo as any).upsert(
-      { name: pDef.name },
-      { name: pDef.name, description: pDef.description, category: pDef.category },
+      { name: displayName },
+      { name: displayName, description: pDef.description, category: pDef.category },
     )
     permissionMap[pDef.code] = perm.id
   }
@@ -53,3 +54,5 @@ export async function seedRBAC(options: SeedRBACOptions): Promise<{
     roleCount: Object.keys(options.roles).length,
   }
 }
+
+// seedCloudRBAC supprime — utiliser @mostajs/cloud-config bootstrapRBAC(seedRBAC) a la place

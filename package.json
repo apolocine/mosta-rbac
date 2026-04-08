@@ -1,6 +1,6 @@
 {
   "name": "@mostajs/rbac",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "RBAC — User/Role/Permission schemas, repos, management UI, API handlers",
   "author": "Dr Hamid MADANI <drmdh@msn.com>",
   "license": "MIT",
@@ -73,6 +73,11 @@
       "types": "./dist/lib/menu.d.ts",
       "import": "./dist/lib/menu.js",
       "default": "./dist/lib/menu.js"
+    },
+    "./helpers/permissions": {
+      "types": "./dist/helpers/permissions.d.ts",
+      "import": "./dist/helpers/permissions.js",
+      "default": "./dist/helpers/permissions.js"
     },
     "./lib/rbac-seed": {
       "types": "./dist/lib/rbac-seed.d.ts",
@@ -186,6 +191,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@mostajs/octoswitcher": "^1.0.0",
     "@mostajs/orm": "^1.0.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.0",
@@ -210,11 +216,15 @@
     "@mostajs/auth": "^1.0.2",
     "@mostajs/menu": "^1.0.3",
     "@mostajs/socle": "^2.0.0",
+    "@tanstack/react-query": "^5.96.2",
     "@types/bcryptjs": "^2.4.0",
     "@types/node": "^25.3.3",
     "@types/react": "^19.0.0",
+    "lucide-react": "^1.7.0",
     "next": "^16.1.6",
+    "radix-ui": "^1.4.3",
     "react": "^19.0.0",
+    "sonner": "^2.0.7",
     "typescript": "^5.6.0"
   },
   "peerDependenciesMeta": {
