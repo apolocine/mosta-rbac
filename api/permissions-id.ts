@@ -1,8 +1,7 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
 // RBAC API handler: PUT/DELETE /admin/permissions/[id]
 import { NextRequest, NextResponse } from 'next/server'
-import { PermissionRepository, RoleRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 
 const updatePermissionSchema = z.object({
@@ -37,7 +36,7 @@ export function createPermissionsIdHandler(config: PermissionsIdHandlerConfig) {
       )
     }
 
-    const pRepo = new PermissionRepository(await getDialect())
+    const { permissions: pRepo } = await getRbacRepos()
     const permission = await pRepo.update(id, parsed.data)
 
     if (!permission) {
@@ -58,7 +57,7 @@ export function createPermissionsIdHandler(config: PermissionsIdHandlerConfig) {
     if (error) return error
 
     const { id } = await params
-    const pRepo = new PermissionRepository(await getDialect())
+    const { permissions: pRepo, roles: rRepo } = await getRbacRepos()
 
     const permission = await pRepo.findById(id)
     if (!permission) {
@@ -69,7 +68,6 @@ export function createPermissionsIdHandler(config: PermissionsIdHandlerConfig) {
     }
 
     // Remove permission from all roles that have it
-    const rRepo = new RoleRepository(await getDialect())
     await rRepo.removePermissionFromAll(id)
 
     await pRepo.delete(id)

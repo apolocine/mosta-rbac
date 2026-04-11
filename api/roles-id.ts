@@ -1,8 +1,7 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
 // RBAC API handler: GET/PUT/DELETE /admin/roles/[id]
 import { NextRequest, NextResponse } from 'next/server'
-import { RoleRepository, UserRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 
 const updateRoleSchema = z.object({
@@ -28,7 +27,7 @@ export function createRolesIdHandler(config: RolesIdHandlerConfig) {
     if (error) return error
 
     const { id } = await params
-    const rRepo = new RoleRepository(await getDialect())
+    const { roles: rRepo, users: uRepo } = await getRbacRepos()
 
     const role = await rRepo.findByIdWithPermissions(id)
     if (!role) {
@@ -37,8 +36,6 @@ export function createRolesIdHandler(config: RolesIdHandlerConfig) {
         { status: 404 }
       )
     }
-
-    const uRepo = new UserRepository(await getDialect())
     const userCount = await uRepo.count({ role: role.name })
 
     return NextResponse.json({ data: { ...role, userCount } })
@@ -63,7 +60,7 @@ export function createRolesIdHandler(config: RolesIdHandlerConfig) {
       )
     }
 
-    const rRepo = new RoleRepository(await getDialect())
+    const { roles: rRepo } = await getRbacRepos()
     const existingRole = await rRepo.findById(id)
     if (!existingRole) {
       return NextResponse.json(
@@ -112,7 +109,7 @@ export function createRolesIdHandler(config: RolesIdHandlerConfig) {
     if (error) return error
 
     const { id } = await params
-    const rRepo = new RoleRepository(await getDialect())
+    const { roles: rRepo, users: uRepo } = await getRbacRepos()
 
     const role = await rRepo.findById(id)
     if (!role) {
@@ -128,8 +125,6 @@ export function createRolesIdHandler(config: RolesIdHandlerConfig) {
         { status: 403 }
       )
     }
-
-    const uRepo = new UserRepository(await getDialect())
     const userCount = await uRepo.count({ role: role.name })
     if (userCount > 0) {
       return NextResponse.json(

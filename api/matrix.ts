@@ -1,8 +1,7 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
 // RBAC API handler: GET/POST /admin/permissions/matrix
 import { NextRequest, NextResponse } from 'next/server'
-import { PermissionRepository, RoleRepository, PermissionCategoryRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 import type { CategoryDefinition } from '../types'
 
@@ -19,11 +18,7 @@ export function createMatrixHandler(config: MatrixHandlerConfig) {
     const { error } = await checkPermission(adminPermission)
     if (error) return error
 
-    const [pRepo, rRepo, catRepo] = await Promise.all([
-      getDialect().then(d => new PermissionRepository(d)),
-      getDialect().then(d => new RoleRepository(d)),
-      getDialect().then(d => new PermissionCategoryRepository(d)),
-    ])
+    const { permissions: pRepo, roles: rRepo, categories: catRepo } = await getRbacRepos()
 
     const [permissions, roles, dbCategories] = await Promise.all([
       pRepo.findAllSorted(),
@@ -104,7 +99,7 @@ export function createMatrixHandler(config: MatrixHandlerConfig) {
     }
 
     const { changes } = parsed.data
-    const rRepo = new RoleRepository(await getDialect())
+    const { roles: rRepo } = await getRbacRepos()
     let applied = 0
 
     for (const change of changes) {

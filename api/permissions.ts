@@ -1,8 +1,7 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
 // RBAC API handler: GET/POST /admin/permissions
 import { NextRequest, NextResponse } from 'next/server'
-import { PermissionRepository, RoleRepository, PermissionCategoryRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 import type { PermissionDefinition, CategoryDefinition } from '../types'
 
@@ -32,7 +31,7 @@ export function createPermissionsHandler(config: PermissionsHandlerConfig) {
     if (error) return error
 
     // Read category labels from DB, fallback to hardcoded
-    const catRepo = new PermissionCategoryRepository(await getDialect())
+    const { categories: catRepo, permissions: pRepo, roles: rRepo } = await getRbacRepos()
     const dbCategories = await catRepo.findAllOrdered()
     const categoryLabels: Record<string, string> = {}
     if (dbCategories.length > 0) {
@@ -44,8 +43,6 @@ export function createPermissionsHandler(config: PermissionsHandlerConfig) {
         categoryLabels[cat.name] = cat.label
       }
     }
-
-    const pRepo = new PermissionRepository(await getDialect())
     let permissions = await pRepo.findAllSorted()
 
     // Fallback: if DB is empty, return hardcoded definitions
@@ -61,7 +58,6 @@ export function createPermissionsHandler(config: PermissionsHandlerConfig) {
     }
 
     // Count roles per permission
-    const rRepo = new RoleRepository(await getDialect())
     const roles = await rRepo.findAllWithPermissions()
     const permRoleCount: Record<string, number> = {}
     for (const role of roles) {
@@ -102,7 +98,7 @@ export function createPermissionsHandler(config: PermissionsHandlerConfig) {
     }
 
     const { name, description, category } = parsed.data
-    const pRepo = new PermissionRepository(await getDialect())
+    const { permissions: pRepo, categories: catRepo } = await getRbacRepos()
 
     const existing = await pRepo.findByName(name)
     if (existing) {
@@ -116,7 +112,6 @@ export function createPermissionsHandler(config: PermissionsHandlerConfig) {
     const derivedCategory = category || name.split(':')[0]
 
     // Validate category exists in DB or in fallback definitions
-    const catRepo = new PermissionCategoryRepository(await getDialect())
     const catExists = await catRepo.findByName(derivedCategory)
     if (!catExists) {
       const fallbackExists = categoryDefinitions.some((c) => c.name === derivedCategory)

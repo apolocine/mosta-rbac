@@ -1,8 +1,7 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
 // RBAC API handler: GET/POST /admin/categories
 import { NextRequest, NextResponse } from 'next/server'
-import { PermissionCategoryRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 import type { CategoryDefinition } from '../types'
 
@@ -27,7 +26,7 @@ export function createCategoriesHandler(config: CategoriesHandlerConfig) {
     const { error } = await checkPermission(adminPermission)
     if (error) return error
 
-    const repo = new PermissionCategoryRepository(await getDialect())
+    const { categories: repo } = await getRbacRepos()
     let categories = await repo.findAllOrdered()
 
     // Fallback: if DB is empty, return hardcoded definitions
@@ -63,7 +62,7 @@ export function createCategoriesHandler(config: CategoriesHandlerConfig) {
     }
 
     const { name, label, description, icon, order } = parsed.data
-    const repo = new PermissionCategoryRepository(await getDialect())
+    const { categories: repo } = await getRbacRepos()
 
     const existing = await repo.findByName(name)
     if (existing) {

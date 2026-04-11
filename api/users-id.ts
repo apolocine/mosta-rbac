@@ -2,8 +2,7 @@
 // RBAC API handler: GET/PUT/DELETE /users/[id]
 import { NextRequest, NextResponse } from 'next/server'
 import { hashPassword } from '@mostajs/auth/lib/password'
-import { UserRepository, RoleRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 
 const updateUserSchema = z.object({
@@ -39,7 +38,7 @@ export function createUsersIdHandler(config: UsersIdHandlerConfig) {
     if (error) return error
 
     const { id } = await params
-    const repo = new UserRepository(await getDialect())
+    const repo = (await getRbacRepos()).users
 
     const user = await repo.findByIdSafe(id)
     if (!user) {
@@ -79,7 +78,7 @@ export function createUsersIdHandler(config: UsersIdHandlerConfig) {
 
     if (updateData.role) {
       if (!knownRoles.includes(updateData.role)) {
-        const rRepo = new RoleRepository(await getDialect())
+        const rRepo = (await getRbacRepos()).roles
         const dbRole = await rRepo.findByName(updateData.role)
         if (!dbRole) {
           return NextResponse.json(
@@ -93,7 +92,7 @@ export function createUsersIdHandler(config: UsersIdHandlerConfig) {
       }
     }
 
-    const repo = new UserRepository(await getDialect())
+    const repo = (await getRbacRepos()).users
     const user = await repo.update(id, updateData)
 
     if (!user) {
@@ -124,7 +123,7 @@ export function createUsersIdHandler(config: UsersIdHandlerConfig) {
       )
     }
 
-    const repo = new UserRepository(await getDialect())
+    const repo = (await getRbacRepos()).users
     const user = await repo.update(id, { status: 'disabled' })
 
     if (!user) {

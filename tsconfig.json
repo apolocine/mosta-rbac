@@ -19,10 +19,14 @@
   },
   "include": [
     "index.ts",
+    "register.ts",
     "server.ts",
     "api/**/*.ts",
     "components/**/*.tsx",
+    "pages/**/*.tsx",
+    "helpers/**/*.ts",
     "lib/**/*.ts",
+    "i18n/**/*.json",
     "types/**/*.ts"
   ],
   "exclude": ["node_modules", "dist"]

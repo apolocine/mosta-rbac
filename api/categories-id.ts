@@ -1,8 +1,7 @@
 // Author: Dr Hamid MADANI drmdh@msn.com
 // RBAC API handler: PUT/DELETE /admin/categories/[id]
 import { NextRequest, NextResponse } from 'next/server'
-import { PermissionCategoryRepository, PermissionRepository } from '@mostajs/auth'
-import { getDialect } from '@mostajs/orm'
+import { getRbacRepos } from '../lib/repos-factory'
 import { z } from 'zod'
 
 const updateCategorySchema = z.object({
@@ -35,7 +34,7 @@ export function createCategoriesIdHandler(config: CategoriesIdHandlerConfig) {
       )
     }
 
-    const catRepo = new PermissionCategoryRepository(await getDialect())
+    const { categories: catRepo } = await getRbacRepos()
 
     const category = await catRepo.findById(id)
     if (!category) {
@@ -61,7 +60,7 @@ export function createCategoriesIdHandler(config: CategoriesIdHandlerConfig) {
     if (error) return error
 
     const { id } = await params
-    const catRepo = new PermissionCategoryRepository(await getDialect())
+    const { categories: catRepo, permissions: pRepo } = await getRbacRepos()
 
     const category = await catRepo.findById(id)
     if (!category) {
@@ -79,7 +78,6 @@ export function createCategoriesIdHandler(config: CategoriesIdHandlerConfig) {
     }
 
     // Check if permissions are using this category
-    const pRepo = new PermissionRepository(await getDialect())
     const permCount = await pRepo.count({ category: category.name })
     if (permCount > 0) {
       return NextResponse.json(
