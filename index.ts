@@ -7,6 +7,7 @@ export { UserSchema } from './schemas/user.schema'
 export { RoleSchema } from './schemas/role.schema'
 export { PermissionSchema } from './schemas/permission.schema'
 export { PermissionCategorySchema } from './schemas/permission-category.schema'
+export { AccountSchema } from './schemas/account.schema'
 
 // Menu contribution
 export { rbacMenuContribution } from './lib/menu'

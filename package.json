@@ -1,9 +1,10 @@
 {
   "name": "@mostajs/rbac",
-  "version": "2.2.2",
+  "version": "2.3.4",
   "description": "RBAC — User/Role/Permission schemas, repos, management UI, API handlers",
   "author": "Dr Hamid MADANI <drmdh@msn.com>",
   "license": "AGPL-3.0-or-later",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -187,7 +188,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run fix-esm",
+    "fix-esm": "find dist -name '*.js' -exec sed -i -E \"s|from '(\\\\.{1,2}/[^']+)'(;?)|from '\\\\1.js'\\\\2|g; s|from \\\"(\\\\.{1,2}/[^\\\"]+)\\\"(;?)|from \\\"\\\\1.js\\\"\\\\2|g\" {} \\; && find dist -name '*.js' -exec sed -i -E \"s|\\\\.js\\\\.js|.js|g\" {} \\;",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {

@@ -47,6 +47,20 @@ export interface PermissionCategoryDTO {
   updatedAt: string
 }
 
+export interface AccountDTO {
+  id: string
+  name: string
+  type: 'personal' | 'organization' | 'trial' | 'system'
+  plan: string
+  status: 'active' | 'suspended' | 'deleted'
+  stripeCustomerId?: string
+  metadata?: Record<string, any>
+  owner: string | { id: string }
+  members?: any[]
+  createdAt: string
+  updatedAt: string
+}
+
 // ─── UI Data Shapes ──────────────────────────────────────────
 
 export interface User {

@@ -6,10 +6,11 @@ import { UserSchema } from '../schemas/user.schema.js'
 import { RoleSchema } from '../schemas/role.schema.js'
 import { PermissionSchema } from '../schemas/permission.schema.js'
 import { PermissionCategorySchema } from '../schemas/permission-category.schema.js'
+import { AccountSchema } from '../schemas/account.schema.js'
 
 /** All schemas provided by this module (plain objects — JSON-serializable) */
 export function getSchemas() {
-  return [UserSchema, RoleSchema, PermissionSchema, PermissionCategorySchema]
+  return [UserSchema, RoleSchema, PermissionSchema, PermissionCategorySchema, AccountSchema]
 }
 
 /** Module metadata for setup discovery */
