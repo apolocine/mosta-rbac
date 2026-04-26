@@ -1,5 +1,5 @@
 // repos-factory.ts — Centralized repository factory
-// Uses @mostajs/octoswitcher to get the right dialect (ORM or NET)
+// Uses @mostajs/data-plug to get the right dialect (ORM or NET)
 // Author: Dr Hamid MADANI drmdh@msn.com
 
 import type { UserDTO, RoleDTO, PermissionDTO, PermissionCategoryDTO } from '../types/index.js';
@@ -83,7 +83,7 @@ let _cached: RbacRepos | null = null;
 export async function getRbacRepos(): Promise<RbacRepos> {
   if (_cached) return _cached;
 
-  const { getDialect } = await import('@mostajs/octoswitcher');
+  const { getDialect } = await import('@mostajs/data-plug');
   const { registerSchemas } = await import('@mostajs/orm');
   const { UserSchema } = await import('../schemas/user.schema.js');
   const { RoleSchema } = await import('../schemas/role.schema.js');

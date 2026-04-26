@@ -1,6 +1,6 @@
 {
   "name": "@mostajs/rbac",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "RBAC — User/Role/Permission schemas, repos, management UI, API handlers",
   "author": "Dr Hamid MADANI <drmdh@msn.com>",
   "license": "AGPL-3.0-or-later",
@@ -193,7 +193,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@mostajs/octoswitcher": "^1.0.0",
+    "@mostajs/data-plug": "^1.0.0",
     "@mostajs/orm": "^1.0.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.0",
