@@ -1,6 +1,6 @@
 {
   "name": "@mostajs/rbac",
-  "version": "2.3.5",
+  "version": "2.4.0",
   "description": "RBAC — User/Role/Permission schemas, repos, management UI, API handlers",
   "author": "Dr Hamid MADANI <drmdh@msn.com>",
   "license": "AGPL-3.0-or-later",
